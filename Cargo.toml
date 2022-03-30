@@ -1,0 +1,10 @@
+[package]
+name = "leetcode"
+version = "2022.3.30"
+edition = "2021"
+
+[dependencies]
+
+[[bin]]
+name = "371"
+path = "src/#371_sum_of_two_integers/.rs"
