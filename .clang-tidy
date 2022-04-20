@@ -6,3 +6,4 @@ Checks: >
   portability-*,
   -readability-magic-numbers,
   -modernize-use-trailing-return-type,
+  -readability-identifier-length,

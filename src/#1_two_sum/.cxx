@@ -1,8 +1,12 @@
 #include <gtest/gtest.h>
+#include <benchmark/benchmark.h>
+#include <algorithm>
+#include <random>
 #include <vector>
 #include <unordered_map>
 
 using namespace std;
+
 
 class Solution {
 public:
@@ -52,7 +56,34 @@ TEST (twoSum, EmptyInputContainer) {
 }
 
 
-auto main(int argc, char **argv) -> int {
-    ::testing::InitGoogleTest(&argc, argv); 
-    return RUN_ALL_TESTS();
+static void
+BM_twoSum(benchmark::State& state) {
+
+    random_device rd;
+    mt19937 eng(rd());
+    uniform_int_distribution<> distrib(-4096, 4096);
+
+    vector<int> nums (1 << state.range(0));  // 2^state.range(0) size
+    generate(nums.begin(), nums.end(), [&]{return distrib(eng);});
+    int target = distrib(eng);
+    
+    for (auto _ : state) {
+        Solution::twoSum(nums, target);
+    }
+}
+BENCHMARK(BM_twoSum)->DenseRange(10, 12);
+
+
+int main(int argc, char **argv) {
+
+    ::testing::InitGoogleTest(&argc, argv);
+    if (RUN_ALL_TESTS() != 0) {
+        return 1;
+    }
+
+    ::benchmark::Initialize(&argc, argv);
+    if (::benchmark::ReportUnrecognizedArguments(argc, argv)) {
+        return 1;
+    }
+    ::benchmark::RunSpecifiedBenchmarks();
 }
